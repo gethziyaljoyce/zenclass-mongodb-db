@@ -1,0 +1,135 @@
+//create database
+
+use zen_class;
+
+//create collection users and insert data
+
+db.createCollection("users");
+db.users.insertMany([{id:1,studentName:"joyce"},{id:2,studentName:"joe"},{id:3,studentName:"johaan"},{id:4,studentName:"job"},{id:5,studentName:"josiah"}]);
+
+//create collection codekata and insert data
+
+db.codekata.insertMany([{studentId:1,noOfPblmSolved:100},{studentId:2,noOfPblmSolved:110},{studentId:3,noOfPblmSolved:101},{studentId:4,noOfPblmSolved:120},{studentId:5,noOfPblmSolved:100}]);
+
+1. Find the number of problems solved by the user in codekata
+
+db.codekata.aggregate([
+    {$lookup: {
+           from: "users",
+           localField: "studentId",
+           foreignField: "id",
+           as: "studentInfo"
+         }},
+         ])
+
+//create collection topics and insert data
+	 
+db.topics.insertMany([{topicDate:ISODate("2020-10-03T00:00:00Z"),topic:"JavaScript for React"},
+{topicDate:ISODate("2020-10-07T00:00:00Z"),topic:"JavaScript for React"},
+{topicDate:ISODate("2020-10-11T00:00:00Z")topic:"var, let and const"},
+{topicDate:ISODate("2020-10-13T00:00:00Z"),topic:"Objectt"},
+{topicDate:ISODate("2020-10-17T00:00:00Z"),topic:"this keyword and bind"},
+{topicDate:ISODate("2020-10-18T00:00:00Z"),topic:"Arrow functions"},
+{topicDate:ISODate("2020-10-19T00:00:00Z"),topic:"Array Functions"},
+{topicDate:ISODate("2020-10-22T00:00:00Z"),topic:"De-structuring"},
+{topicDate:ISODate("2020-10-24T00:00:00Z"),topic:"Spread Operator"},
+{topicDate:ISODate("2020-10-28T00:00:00Z"),topic:"Async and Await"},
+{topicDate:ISODate("2020-10-30T00:00:00Z"),topic:"Class"},
+{topicDate:ISODate("2020-11-03T00:00:00Z"),topic:"Inheritance"},
+{topicDate:ISODate("2020-11-07T00:00:00Z"),topic:"Modules"},
+{topicDate:ISODate("2020-11-11T00:00:00Z"),topic:"React Fundamentals"},
+{topicDate:ISODate("2020-11-13T00:00:00Z"),topic:"Create-react-app"},
+{topicDate:ISODate("2020-11-15T00:00:00Z"),topic:"JSX Introduction"},
+])
+
+//create collection tasks and insert data
+
+db.tasks.insertMany([{taskDate:ISODate("2020-10-03T00:00:00Z"),task:"task on JavaScript for React"},
+{taskDate:ISODate("2020-10-07T00:00:00Z"),task:" task onJavaScript for React"},
+{taskDate:ISODate("2020-10-11T00:00:00Z"),task:"task on var, let and const"},
+{taskDate:ISODate("2020-10-13T00:00:00Z"),task:"task on Objectt"},
+{taskDate:ISODate("2020-10-17T00:00:00Z"),task:"task on this keyword and bind"},
+{taskDate:ISODate("2020-10-18T00:00:00Z"),task:"task on Arrow functions"},
+{taskDate:ISODate("2020-10-19T00:00:00Z"),task:"task on Array Functions"},
+{taskDate:ISODate("2020-10-22T00:00:00Z"),task:"task on De-structuring"},
+{taskDate:ISODate("2020-10-24T00:00:00Z"),task:"task on Spread Operator"},
+{taskDate:ISODate("2020-10-28T00:00:00Z"),task:"task on Async and Await"},
+{taskDate:ISODate("2020-10-30T00:00:00Z"),task:"task on Class"},
+{taskDate:ISODate("2020-11-03T00:00:00Z"),task:"task on Inheritance"},
+{taskDate:ISODate("2020-11-07T00:00:00Z"),task:"task on Modules"},
+{taskDate:ISODate("2020-11-11T00:00:00Z"),task:"task on React Fundamentals"},
+{taskDate:ISODate("2020-11-13T00:00:00Z"),task:"task on Create-react-app"},
+{taskDate:ISODate("2020-11-15T00:00:00Z"),task:"task on JSX Introduction"},
+])
+
+2. Find all the topics and tasks which are thought in the month of October
+
+db.topics.aggregate([
+    {$lookup: {
+           from: "tasks",
+           localField: "topicDate",
+           foreignField: "taskDate",
+           as: "taskInfo"
+         }},
+         {$match: {topicDate:{$lt:ISODate("2020-10-31T00:00:00Z")}}}])
+
+
+//create collection mentors and insert data
+
+db.mentors.insertMany([
+    {mentorName:"Mr.x",noOfMentee:20},
+    {mentorName:"Mr.y",noOfMentee:10},
+    {mentorName:"Mr.z",noOfMentee:24},
+    {mentorName:"Mr.a",noOfMentee:23},
+    {mentorName:"Mr.b",noOfMentee:12}])
+
+3. Find all the mentors with who has the mentee's count more than 15
+
+db.mentors.find({noOfMentee:{$lt:15}})
+
+
+//create collection attendance and insert data
+
+db.attendance.insertMany([{date: ISODate("2020-10-13T00:00:00Z"), studentAbsent:"joyce",studentTaskNotSubmitted:"joyce"},
+{date:ISODate("2020-10-15T00:00:00Z"), studentAbsent:"josiah", studentTaskNotSubmitted:"josiah"},
+{date:ISODate("2020-10-17T00:00:00Z"), studentAbsent:"johaan", "studentTaskNotSubmitted":"johaan"},
+{date:ISODate("2020-10-19T00:00:00Z"), studentAbsent:"job", studentTaskNotSubmitted:"job"},
+{date:ISODate("2020-10-25T00:00:00Z"), studentAbsent:"joe", studentTaskNotSubmitted:"joe"},
+{date:ISODate("2020-10-30T00:00:00Z"), studentAbsent:"", studentTaskNotSubmitted:""}
+])
+
+
+4. Find the number of users who are absent and task is not submitted  between 15 oct-2020 and 31-oct-2020
+
+db.attendance.find({date:{$gt:ISODate("2020-10-13T00:00:00Z"),$lt:ISODate("2020-10-31T00:00:00Z")} })
+
+//create collection company_drive and insert data
+
+
+db.company_drive.insertMany([{Date:ISODate("2020-10-03T00:00:00Z"),name:"zoho",studentsIdAttended:[1,2,3]},
+{Date:ISODate("2020-10-07T00:00:00Z"),name:"infosys",studentsIdAttended:[2,3]},
+{Date:ISODate("2020-10-11T00:00:00Z"),name:"cts",studentsIdAttended:[3,4,5]},
+{Date:ISODate("2020-10-13T00:00:00Z"),name:"tcs",studentsIdAttended:[4,5]},
+{Date:ISODate("2020-10-17T00:00:00Z"),name:"paypal",studentsIdAttended:[1,2]},
+{Date:ISODate("2020-10-18T00:00:00Z"),name:"amazon",studentsIdAttended:[3,4]},
+{Date:ISODate("2020-10-28T00:00:00Z"),name:"paypal",studentsIdAttended:[1,5]},
+{Date:ISODate("2020-10-30T00:00:00Z"),name:"infosys",studentsIdAttended:[1,5]},
+{Date:ISODate("2020-11-03T00:00:00Z"),name:"amazon",studentsIdAttended:[2,3]},
+{Date:ISODate("2020-11-07T00:00:00Z"),name:"cts",studentsIdAttended:[3,5]},
+{Date:ISODate("2020-11-11T00:00:00Z"),name:"tcs",studentsIdAttended:[4,5]}])
+
+5. Find all the company drives which appeared between 15 oct-2020 and 31-oct-2020
+
+db.company_drive.find({Date:{$gt:ISODate("2020-10-15T00:00:00Z"),$lt:ISODate("2020-10-31T00:00:00Z")}})
+
+6. Find all the company drives and students who are appeared for the placement.
+
+		db.company_drive.aggregate([
+    {$lookup: {
+           from: "users",
+           localField: "studentsIdAttended",
+           foreignField: "id",
+           as: "studentsDetail"
+         }}])
+ 
+		 
